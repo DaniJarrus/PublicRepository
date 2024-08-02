@@ -57,7 +57,7 @@ function resize(){
     contexto.style.height = ""+CANVAS_HEIGHT+"px";
 
 }
-// BUCLE//
+//BUCLE
 setInterval(loop,1000/FPS)
 function loop() {
     ctx.clearRect(0,0,300,530)
