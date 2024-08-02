@@ -1,22 +1,22 @@
-var contexto = document.getElementById("lienzo")
-var ctx = contexto.getContext("2d")
-var WIDTH = 300;
-var HEIGHT = 530;
-var CANVAS_WIDTH = 300;
-var CANVAS_HEIGHT = 530;
+let contexto = document.getElementById("lienzo")
+let ctx = contexto.getContext("2d")
+let WIDTH = 300;
+let HEIGHT = 530;
+let CANVAS_WIDTH = 300;
+let CANVAS_HEIGHT = 530;
 contexto.width = WIDTH;
 contexto.height = HEIGHT;
 //VARIABLES
-var score = 0
-var FPS =60
-var gravedad = 1.5
-var personaje = {
+let score = 0
+let FPS =60
+let gravedad = 1.5
+let personaje = {
     x:50,
     y:150,
     w:50,
     h:50
 }
-var tuberias = new Array()
+let tuberias = new Array()
 tuberias[0] = {
     x:contexto.width,
     y:0
@@ -24,23 +24,23 @@ tuberias[0] = {
 
 //AUDIOS
 
-var punto = new Audio()
+let punto = new Audio()
 punto.src = "Resources/audios/punto.mp3"
 
 //IMAGENES
-var bird = new Image()
+let bird = new Image()
 bird.src = "Resources/imagenes/bird.png"
 
-var background = new Image()
+let background = new Image()
 background.src = "Resources/imagenes/background.png"
 
-var tuberiaNorte = new Image()
+let tuberiaNorte = new Image()
 tuberiaNorte.src = "Resources/imagenes/tuberiaNorte.png"
 
-var tuberiaSur = new Image()
+let tuberiaSur = new Image()
 tuberiaSur.src = "Resources/imagenes/tuberiaSur.png"
 
-var suelo = new Image()
+let suelo = new Image()
 suelo.src = "Resources/imagenes/suelo.png"
 //CONTROL
 function presionar(){
@@ -67,8 +67,8 @@ function loop() {
     //PERSONAJE
     ctx.drawImage(bird,personaje.x,personaje.y)
     //TUBERIAS
-    for(var i = 0; i < tuberias.length ; i++){
-        var constante = tuberiaNorte.height + 80 
+    for(let i = 0; i < tuberias.length ; i++){
+        let constante = tuberiaNorte.height + 80 
         ctx.drawImage(tuberiaNorte,tuberias[i].x,tuberias[i].y)
         ctx.drawImage(tuberiaSur,tuberias[i].x,tuberias[i].y + constante)
         tuberias[i].x--
