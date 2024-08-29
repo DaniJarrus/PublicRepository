@@ -1,4 +1,5 @@
 import { createAnimations } from "./animations.js";
+import { checkControls } from "./controls.js";
 //Global Variable Phaser//
 const config = {
     type: Phaser.AUTO,
@@ -38,7 +39,13 @@ function preload(){
     this.load.spritesheet(
         'mario',
         'assets/entities/mario.png',
-        {frameWidth: 18, frameHeight: 16} //
+        {frameWidth: 18, frameHeight: 16}
+    )
+
+    this.load.spritesheet(
+        'goomba',
+        'assets/entities/overworld/goomba.png',
+        {frameWidth: 16, frameHeight: 16}
     )
 
     this.load.audio('gameover', 'assets/sound/music/gameover.mp3')
@@ -87,12 +94,24 @@ function create(){
         .setCollideWorldBounds(true)
         //Se puede modificar la gravedad
         .setGravityY(300)
+    
+    this.enemy = this.physics.add.sprite(120, config.height - 30, 'goomba')
+        .setOrigin(0, 1)
+        .setGravityY(300)
+        .setVelocityX(-50)    
 
     //Utilizamos setBounds para establecer el tamaño del mapa
     this.physics.world.setBounds(0, 0, 2000, config.height)
+
     //Creamos una colision entre Mario y el suelo
     this.physics.add.collider(this.mario, this.floor)
-    
+
+    //Creamos una colision entre el enemigo y el suelo
+    this.physics.add.collider(this.enemy, this.floor)
+
+    //Creamos una colision entre Mario y el enemigo
+    this.physics.add.collider(this.mario, this.enemy, onHitEnemy)
+
     //Nos permite establecer el tamaño que tendrá la camara
     this.cameras.main.setBounds(0, 0, 2000, config.height)
     //Establecemos que la camara siga al propio Mario
@@ -100,37 +119,28 @@ function create(){
 
     createAnimations(this)
 
+    this.enemy.anims.play('goomba-walk', true)
+
     this.keys = this.input.keyboard.createCursorKeys()
+}
+
+function onHitEnemy (mario, enemy) {
+    if (mario.body.touching.down && enemy.body.touching.up){
+        enemy.destroy()
+        mario.setVelocityY(-200)
+    } else {
+        //morir Mario
+    }
 }
 
 // Se ejecuta el tercero y continuamente
 function update(){
 
-    const {keys, mario} = this
-    const isMarioTouchingFloor = mario.body.touching.down
-    const isLeftKeyDown = keys.left.isDown
-    const isRightKeyDown = keys.right.isDown
-    const isUpKeyDown = keys.up.isDown
+    checkControls(this)
 
-    if(mario.isDead) return
-    // MOVER MARIO DERECHA IZQUIERDA
-    if (isLeftKeyDown){
-        mario.x -= 2
-        isMarioTouchingFloor && mario.anims.play('mario-walk', true)
-        mario.flipX = true
-    } else if (isRightKeyDown){
-        mario.x += 2
-        isMarioTouchingFloor && mario.anims.play('mario-walk', true)
-        mario.flipX = false
-    } else if(isMarioTouchingFloor) {
-        mario.anims.play('mario-idle', true)
-    }
+    const {mario, sound, scene} = this
 
-    if(isUpKeyDown && isMarioTouchingFloor){
-        mario.setVelocityY(-300)
-        mario.anims.play('mario-jump', true)
-    }
-
+    //Check if Mario is dead
     if(mario.y >= config.height){
         mario.isDead = true
         mario.anims.play('mario-dead')
