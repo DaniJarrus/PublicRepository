@@ -130,6 +130,7 @@ function onHitEnemy (mario, enemy) {
         mario.setVelocityY(-200)
     } else {
         //morir Mario
+        
     }
 }
 
